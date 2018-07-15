@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    main {
+      display: flex;
+    }
+
+    pre {
+      outline: 1px solid #ccc;
+      padding: 5px;
+      margin: 5px;
+    }
+
+    pre .string {
+      color: green;
+    }
+
+    pre .number {
+      color: darkorange;
+    }
+
+    pre .boolean {
+      color: blue;
+    }
+
+    pre .null {
+      color: magenta;
+    }
+
+    pre .key {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+<h1>English Football</h1>
+<main>
+  <section>
+    <h3>GET all</h3>
+    <p>
+      <button onclick="getData('clubs', 'get-all-output')">Get all clubs</button>
+      <button onclick="getData('rounds', 'get-all-output')">Get all rounds</button>
+    </p>
+    <pre id="get-all-output"></pre>
+  </section>
+  <section>
+    <h3>GET all</h3>
+    <p>
+      <button onclick="getData('clubs', 'get-by-output', 'CHE')">Get club CHE</button>
+      <button onclick="getData('rounds', 'get-by-output', 1)">Get rounds for Matchday 1</button>
+    </p>
+    <pre id="get-by-output"></pre>
+  </section>
+  <section>
+
+  </section>
+  <section></section>
+  <section></section>
+</main>
+
+<script>
+  // pretty print and highlight json
+  function formatJSON(json) {
+    if (typeof json !== 'string') {
+      json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+      let cls = 'number';
+      if (/^"/.test(match)) {
+        if (/:$/.test(match)) {
+          cls = 'key';
+        } else {
+          cls = 'string';
+        }
+      } else if (/true|false/.test(match)) {
+        cls = 'boolean';
+      } else if (/null/.test(match)) {
+        cls = 'null';
+      }
+      return '<span class="' + cls + '">' + match + '</span>';
+    });
+  }
+
+  function getData(endpoint, outputId, qparam = '') {
+    fetch(`api/${endpoint}/${qparam}`)
+      .then((res) => res.json())
+      .then((data) => document.getElementById(outputId).innerHTML = formatJSON(data))
+  }
+</script>
+</body>
+</html>
