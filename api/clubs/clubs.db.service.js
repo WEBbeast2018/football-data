@@ -1,26 +1,23 @@
-const data = [
-  {
-    "key": "chelsea",
-    "name": "Chelsea",
-    "code": "CHE"
-  },
-  {
-    "key": "arsenal",
-    "name": "Arsenal",
-    "code": "ARS"
-  },
-  {
-    "key": "tottenham",
-    "name": "Tottenham Hotspur",
-    "code": "TOT"
-  }
-];
+const mongoose = require('mongoose');
+
+// create schema
+const ClubSchema = mongoose.Schema({
+  key: String,
+  name: String,
+  code: String,
+});
+const Club = mongoose.model('Club', ClubSchema);
 
 module.exports = {
   all: (callback) => {
-    callback(data);
+    Club.find({}, {_id:0}, (err, data) => {
+      callback(data);
+    })
   },
   findByCode: (code, callback) => {
-    callback(data.filter(c => c.code === code));
+    // todo: improve query
+    Club.find({}, {_id:0}, (err, data) => {
+      callback(data.filter(c => c.code === code));
+    })
   }
 };
